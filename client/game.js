@@ -72,6 +72,18 @@ const tutorial = {
   alpha: 1,
 };
 
+let score = 0;
+let scoreTimer = 60; // Increase score every 60 frames (1 second)
+
+let gameOver = false;
+
+const sounds = {
+  attack: new Audio('sounds/attack.wav'),
+  eat: new Audio('sounds/eat.wav'),
+  playerDamage: new Audio('sounds/player_damage.wav'),
+  enemyDamage: new Audio('sounds/enemy_damage.wav'),
+};
+
 const keys = {};
 
 window.addEventListener('keydown', (e) => {
@@ -88,6 +100,9 @@ window.addEventListener('keydown', (e) => {
   if (e.key === ' ') {
     attack();
   }
+  if (gameOver && e.key === 'r') {
+    restartGame();
+  }
 });
 
 window.addEventListener('keyup', (e) => {
@@ -97,6 +112,13 @@ window.addEventListener('keyup', (e) => {
 let hungerTimer = 200; // Decrease hunger every 200 frames
 
 function update() {
+  // Score
+  scoreTimer--;
+  if (scoreTimer <= 0) {
+    score++;
+    scoreTimer = 60;
+  }
+
   // Day/night cycle
   gameTime.time++;
   if (gameTime.time >= gameTime.dayLength) {
@@ -117,9 +139,8 @@ function update() {
   }
 
   if (player.health <= 0) {
-    console.log('Game Over');
+    gameOver = true;
     player.health = 0;
-    // For now, we'll just log to the console. We can add a proper game over screen later.
   }
 
   if (keys['w'] || keys['ArrowUp']) {
@@ -187,11 +208,13 @@ function update() {
       player.y + player.height > enemy.y
     ) {
       player.health--;
+      sounds.playerDamage.play();
     }
   }
 }
 
 function attack() {
+  sounds.attack.play();
   for (let i = enemies.length - 1; i >= 0; i--) {
     const enemy = enemies[i];
     const dx = player.x - enemy.x;
@@ -203,11 +226,13 @@ function attack() {
       if (enemy.health <= 0) {
         enemies.splice(i, 1);
       }
+      sounds.enemyDamage.play();
     }
   }
 }
 
 function eat(food) {
+  sounds.eat.play();
   if (inventory[food] > 0) {
     inventory[food]--;
     player.hunger += 20;
@@ -301,6 +326,7 @@ function drawTutorial() {
 }
 
 function updateUI() {
+  let scoreText = `Score: ${score}<br><br>`;
   let timeText = `Time: ${gameTime.day ? 'Day' : 'Night'}<br><br>`;
   let statsText = `Health: ${player.health}<br>Hunger: ${player.hunger}<br><br>`;
   let inventoryText = 'Inventory:<br>';
@@ -320,10 +346,61 @@ function updateUI() {
     craftingText += '<br>';
   }
 
-  uiContainer.innerHTML = timeText + statsText + inventoryText + craftingText;
+  uiContainer.innerHTML = scoreText + timeText + statsText + inventoryText + craftingText;
+}
+
+function drawGameOver() {
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  ctx.fillStyle = 'white';
+  ctx.font = '48px Arial';
+  ctx.textAlign = 'center';
+  ctx.fillText('Game Over', canvas.width / 2, canvas.height / 2 - 50);
+
+  ctx.font = '24px Arial';
+  ctx.fillText(`Your score: ${score}`, canvas.width / 2, canvas.height / 2);
+
+  ctx.font = '18px Arial';
+  ctx.fillText('Press R to Replay', canvas.width / 2, canvas.height / 2 + 50);
+}
+
+function restartGame() {
+  player.health = 100;
+  player.hunger = 100;
+  player.x = canvas.width / 2;
+  player.y = canvas.height / 2;
+
+  for (const item in inventory) {
+    inventory[item] = 0;
+  }
+
+  resources.push(
+    { x: 100, y: 100, width: 50, height: 50, color: 'green', type: 'wood' },
+    { x: 500, y: 300, width: 50, height: 50, color: 'gray', type: 'stone' },
+    { x: 200, y: 500, width: 50, height: 50, color: 'green', type: 'wood' }
+  );
+
+  foods.push(
+    { x: 300, y: 150, width: 20, height: 20, color: 'red', type: 'berry' },
+    { x: 600, y: 400, width: 20, height: 20, color: 'red', type: 'berry' }
+  );
+
+  enemies.push(
+    { x: 400, y: 200, width: 40, height: 40, color: 'purple', speed: 2, health: 3 },
+    { x: 700, y: 500, width: 40, height: 40, color: 'purple', speed: 2, health: 3 }
+  );
+
+  score = 0;
+  gameOver = false;
+  gameLoop();
 }
 
 function gameLoop() {
+  if (gameOver) {
+    drawGameOver();
+    return;
+  }
   // Game logic will go here
   update();
 
