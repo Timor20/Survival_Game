@@ -1,18 +1,131 @@
 body {
   margin: 0;
   overflow: hidden;
+  font-family: 'Press Start 2P', cursive;
+  color: white;
+  text-shadow: 2px 2px #000000;
 }
 
 canvas {
   display: block;
 }
 
-#ui-container {
+.ui-panel {
   position: absolute;
-  bottom: 10px;
-  left: 10px;
   background-color: rgba(0, 0, 0, 0.5);
-  color: white;
   padding: 10px;
   border-radius: 5px;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+#top-bar {
+  text-align: left;
+  margin-bottom: 10px;
+}
+
+#player-stats {
+  bottom: 10px;
+  left: 10px;
+}
+
+#inventory-display {
+  bottom: 10px;
+  right: 10px;
+  text-align: right;
+}
+
+#controls-display {
+  top: 10px;
+  right: 10px;
+  text-align: left;
+}
+
+#consumable-display {
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+.stat-bar-container {
+  width: 150px;
+  height: 15px;
+  background-color: #555;
+  border: 1px solid #000;
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
+.stat-bar {
+  height: 100%;
+  transition: width 0.2s ease-in-out;
+}
+
+#health-bar {
+  background-color: #c0392b; /* Red */
+}
+
+#hunger-bar {
+  background-color: #f39c12; /* Orange */
+}
+
+#crafting-menu {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.hidden {
+  display: none;
+}
+#chest-menu {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
+  background-color: rgba(0, 0, 0, 0.8);
+  border: 2px solid #ccc;
+  color: white;
+  min-width: 400px;
+}
+
+.chest-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.inventory-panel {
+  width: 48%;
+}
+#furnace-menu {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
+  background-color: rgba(0, 0, 0, 0.8);
+  border: 2px solid #ccc;
+  color: white;
+  text-align: center;
+}
+
+.furnace-slots {
+  display: flex;
+  justify-content: space-around;
+  margin: 10px 0;
+}
+
+.slot {
+  border: 1px solid #555;
+  padding: 10px;
+  min-width: 100px;
+  min-height: 50px;
 }

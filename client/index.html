@@ -4,11 +4,29 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Survival Game</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <canvas id="gameCanvas"></canvas>
-  <div id="ui-container"></div>
+  <div id="player-stats" class="ui-panel">
+    <div>Health</div>
+    <div class="stat-bar-container">
+      <div id="health-bar" class="stat-bar"></div>
+    </div>
+    <div>Hunger</div>
+    <div class="stat-bar-container">
+      <div id="hunger-bar" class="stat-bar"></div>
+    </div>
+  </div>
+  <div id="inventory-display" class="ui-panel"></div>
+  <div id="controls-display" class="ui-panel">
+      <div id="top-bar"></div>
+  </div>
+  <div id="consumable-display" class="ui-panel"></div>
+  <div id="crafting-menu" class="hidden"></div>
+  <div id="chest-menu" class="hidden"></div>
+  <div id="furnace-menu" class="hidden"></div>
   <script src="game.js"></script>
 </body>
 </html>
